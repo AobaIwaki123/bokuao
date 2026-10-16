@@ -1,0 +1,17 @@
+# Binaries
+bin/
+/bokuao
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test artifacts
+*.test
+*.out
+
+# OS & Editor
+.DS_Store
+.idea/
+.vscode/
