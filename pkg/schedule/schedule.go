@@ -5,6 +5,7 @@ package schedule
 import (
 	"context"
 	"fmt"
+	"html"
 	"io"
 	"net/http"
 	"regexp"
@@ -106,8 +107,8 @@ func (c *Client) Fetch(ctx context.Context, year, month int) ([]Event, error) {
 }
 
 // ParseHTML extracts Events from raw HTML schedule list content.
-func ParseHTML(html, baseURL string) ([]Event, error) {
-	blocks := strings.Split(html, "<li data-delighter>")
+func ParseHTML(rawHTML, baseURL string) ([]Event, error) {
+	blocks := strings.Split(rawHTML, "<li data-delighter>")
 	if len(blocks) <= 1 {
 		return nil, nil
 	}
@@ -120,14 +121,14 @@ func ParseHTML(html, baseURL string) ([]Event, error) {
 			ev.Week = m[2]
 		}
 		if m := reCat.FindStringSubmatch(b); len(m) > 1 {
-			ev.Category = strings.TrimSpace(m[1])
+			ev.Category = html.UnescapeString(strings.TrimSpace(m[1]))
 		}
 		if m := reTime.FindStringSubmatch(b); len(m) > 1 {
 			cleanTime := reTag.ReplaceAllString(m[1], "")
-			ev.Time = strings.TrimSpace(cleanTime)
+			ev.Time = html.UnescapeString(strings.TrimSpace(cleanTime))
 		}
 		if m := reTit.FindStringSubmatch(b); len(m) > 1 {
-			ev.Title = strings.TrimSpace(m[1])
+			ev.Title = html.UnescapeString(strings.TrimSpace(m[1]))
 		}
 		if m := reHref.FindStringSubmatch(b); len(m) > 1 {
 			path := m[1]
