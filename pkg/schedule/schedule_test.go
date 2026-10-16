@@ -110,6 +110,9 @@ func TestParseHTML(t *testing.T) {
 	if ev1.Date != "11.14" || ev1.Week != "SAT" || ev1.Category != "LIVE/EVENT" {
 		t.Errorf("unexpected event 1 metadata: %+v", ev1)
 	}
+	if ev1.Title != "僕青フリーライブ&握手会 【東京】ベルサール汐留" {
+		t.Errorf("expected unescaped title, got: %s", ev1.Title)
+	}
 	if !ev1.IsLive {
 		t.Errorf("expected event 1 to be marked as live")
 	}
